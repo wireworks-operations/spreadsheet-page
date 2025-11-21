@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Interactive Excel - Material Design</title>
+<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
+<style>
+:root { --bg-color:#fff; --text-color:#000; --primary-color:#6200ee; --on-primary:#fff; }
+[data-theme='dark'] { --bg-color:#121212; --text-color:#fff; --primary-color:#bb86fc; --on-primary:#000; }
+body { background-color:var(--bg-color); color:var(--text-color); font-family:'Roboto',sans-serif; margin:20px; }
+h1{text-align:center;} .toolbar-container{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:flex-start;background:var(--primary-color);color:var(--on-primary);padding:10px;border-radius:8px 8px 0 0;transform:translateY(100%);transition:transform .3s ease;} .toolbar-container.expanded{transform:translateY(0);} .toolbar-container button{background:none;border:none;color:var(--on-primary);font-size:24px;margin-right:16px;cursor:pointer;} .toolbar-toggle{position:fixed;bottom:10px;right:10px;background:var(--primary-color);color:var(--on-primary);border:none;padding:12px;border-radius:50%;cursor:pointer;font-size:24px;} .md-button{background:var(--primary-color);color:var(--on-primary);border:none;padding:8px 16px;border-radius:50px;cursor:pointer;font-size:14px;margin-right:8px;} .md-button:hover{background:#3700b3;} table{width:100%;border-collapse:collapse;margin-top:10px;} th,td{border:1px solid #ccc;padding:8px;text-align:left;} th{resize:horizontal;overflow:auto;} td[contenteditable='true']{cursor:text;}
+</style>
+</head>
+<body>
+<h1>Interactive Excel - Material Design</h1>
+<input type='text' id='searchBox' placeholder='Search...' class='md-button'>
+<button class='md-button' onclick='toggleDarkMode()'>Toggle Dark Mode</button>
+<section id='Sheet1'>
+<h2 contenteditable='true'>Sheet1</h2>
+<table class='editable-table'><thead><tr><th contenteditable='true'>Column 1</th><th contenteditable='true'>Column 2</th></tr></thead><tbody><tr><td contenteditable='true'></td><td contenteditable='true'></td></tr></tbody></table>
+<div class='controls'>
+<button class='md-button' onclick='addRow(this)'>Add Row</button>
+<button class='md-button' onclick='deleteRow(this)'>Delete Last Row</button>
+<button class='md-button' onclick='addColumn(this)'>Add Column</button>
+<button class='md-button' onclick='deleteColumn(this)'>Delete Last Column</button>
+<button class='md-button' onclick='mergeCells()'>Merge Selected Cells</button>
+<button class='md-button' onclick='deleteSheet(this)'>Delete Sheet</button>
+</div>
+</section>
+<div class='toolbar-container' id='toolbar'>
+<button title='Copy' onclick='copySelection()'><span class='material-icons'>content_copy</span></button>
+<button title='Paste' onclick='pasteSelection()'><span class='material-icons'>content_paste</span></button>
+<button title='Delete Cells' onclick='deleteSelection()'><span class='material-icons'>delete</span></button>
+<button title='Delete Rows' onclick='deleteSelectedRows()'><span class='material-icons'>table_rows</span></button>
+<button title='Delete Columns' onclick='deleteSelectedColumns()'><span class='material-icons'>view_column</span></button>
+<input type='color' id='colorPicker' title='Pick a color'>
+<button title='Apply Color' onclick='applyColor()'><span class='material-icons'>format_color_fill</span></button>
+<button title='Reset Color' onclick='resetColor()'><span class='material-icons'>format_clear</span></button>
+<button title='Export' onclick='exportWithColors()'><span class='material-icons'>download</span></button>
+<button title='New Sheet' onclick='createSheet()'><span class='material-icons'>add</span></button>
+</div>
+<button class='toolbar-toggle' onclick='toggleToolbar()'><span class='material-icons'>settings</span></button>
+<script>
+function toggleToolbar(){document.getElementById('toolbar').classList.toggle('expanded');}
+function toggleDarkMode(){document.body.dataset.theme=document.body.dataset.theme==='dark'?'light':'dark';}
+let selectedCells=[];document.addEventListener('click',function(e){if(e.target.tagName==='TD'||e.target.tagName==='TH'){e.target.classList.toggle('selected');if(selectedCells.includes(e.target)){selectedCells=selectedCells.filter(c=>c!==e.target);}else{selectedCells.push(e.target);}}});
+function addRow(btn){const table=btn.closest('section').querySelector('table');const cols=table.querySelector('thead tr').children.length;const newRow=document.createElement('tr');for(let i=0;i<cols;i++){const cell=document.createElement('td');cell.contentEditable='true';newRow.appendChild(cell);}table.querySelector('tbody').appendChild(newRow);}
+function deleteRow(btn){const table=btn.closest('section').querySelector('table');const rows=table.querySelector('tbody').rows;if(rows.length>0)rows[rows.length-1].remove();}
+function addColumn(btn){const table=btn.closest('section').querySelector('table');const headerRow=table.querySelector('thead tr');const newHeader=document.createElement('th');newHeader.contentEditable='true';newHeader.textContent='New Column';headerRow.appendChild(newHeader);table.querySelectorAll('tbody tr').forEach(row=>{const cell=document.createElement('td');cell.contentEditable='true';row.appendChild(cell);});}
+function deleteColumn(btn){const table=btn.closest('section').querySelector('table');const headers=table.querySelector('thead tr').children;if(headers.length>0){const index=headers.length-1;headers[index].remove();table.querySelectorAll('tbody tr').forEach(row=>row.children[index].remove());}}
+function mergeCells(){if(selectedCells.length>1){const mergedText=selectedCells.map(c=>c.innerText).join(' ');const firstCell=selectedCells[0];firstCell.innerText=mergedText;selectedCells.slice(1).forEach(c=>c.remove());selectedCells=[];}}
+function deleteSheet(btn){const section=btn.closest('section');section.remove();}
+function createSheet(){const sheetName='Sheet'+(document.querySelectorAll('section').length+1);const newSection=`<section id='${sheetName}'><h2 contenteditable='true'>${sheetName}</h2><table class='editable-table'><thead><tr><th contenteditable='true'>Column 1</th></tr></thead><tbody><tr><td contenteditable='true'></td></tr></tbody></table><div class='controls'><button class='md-button' onclick="addRow(this)">Add Row</button><button class='md-button' onclick="deleteRow(this)">Delete Last Row</button><button class='md-button' onclick="addColumn(this)">Add Column</button><button class='md-button' onclick="deleteColumn(this)">Delete Last Column</button><button class='md-button' onclick="mergeCells()">Merge Selected Cells</button><button class='md-button' onclick="deleteSheet(this)">Delete Sheet</button></div></section>`;document.body.insertAdjacentHTML('beforeend',newSection);}
+function copySelection(){const text=selectedCells.map(c=>c.innerText).join('	');navigator.clipboard.writeText(text);}
+function pasteSelection(){navigator.clipboard.readText().then(text=>{const values=text.split('	');selectedCells.forEach((c,i)=>{if(values[i])c.innerText=values[i];});});}
+function deleteSelection(){selectedCells.forEach(c=>c.innerText='');}
+function deleteSelectedRows(){const rowsToDelete=new Set(selectedCells.map(c=>c.closest('tr')));rowsToDelete.forEach(r=>r.remove());selectedCells=[];}
+function deleteSelectedColumns(){const tables=new Set(selectedCells.map(c=>c.closest('table')));tables.forEach(table=>{const colIndexes=new Set(selectedCells.map(c=>Array.from(c.parentNode.children).indexOf(c)));colIndexes.forEach(index=>{table.querySelectorAll('tr').forEach(row=>{if(row.children[index])row.children[index].remove();});});});selectedCells=[];}
+function applyColor(){const color=document.getElementById('colorPicker').value;selectedCells.forEach(c=>c.style.backgroundColor=color);}
+function resetColor(){selectedCells.forEach(c=>c.style.backgroundColor='');}
+function exportWithColors(){const htmlContent=document.documentElement.outerHTML;const blob=new Blob([htmlContent],{type:'text/html;charset=utf-8;'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='excel_blank.html';link.click();}
+</script>
+</body>
+</html>
