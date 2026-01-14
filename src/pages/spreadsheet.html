@@ -1,0 +1,1053 @@
+
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MD3 Spreadsheet Mockup</title>
+  <style>
+    /* ===============================
+       Material Design 3 - Inspired
+       Theme Variables & Resets
+       =============================== */
+    :root {
+      /* Light theme tokens */
+      --md-bg: #f7f7f9;
+      --md-surface: #ffffff;
+      --md-surface-2: #f3f5f7;
+      --md-text: #1e1f23;
+      --md-text-muted: #5b5f66;
+      --md-primary: #3d6df2;
+      --md-primary-variant: #264ec7;
+      --md-accent: #22b07d;
+      --md-error: #d64545;
+
+      --md-outline: #dcdfe3;
+      --md-outline-strong: #c9cdd3;
+
+      --md-elev-1: 0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+      --md-elev-2: 0 4px 10px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
+      --md-focus: 0 0 0 3px rgba(61,109,242,.25), 0 2px 10px rgba(61,109,242,.35);
+
+      --radius-l: 16px;
+      --radius-m: 12px;
+      --radius-s: 10px;
+
+      --cell-bg: var(--md-surface);
+      --cell-bg-alt: #fbfcfd;
+      --cell-border: #e6e9ee;
+      --header-bg: #eef2ff;
+      --header-text: #23325d;
+
+      --tooltip-bg: rgba(20,22,26,.92);
+      --tooltip-text: #fff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        /* Dark theme defaults when [data-theme=auto] */
+        --md-bg: #0f1116;
+        --md-surface: #151923;
+        --md-surface-2: #0f141d;
+        --md-text: #e9edf3;
+        --md-text-muted: #b5bcc7;
+        --md-primary: #84a4ff;
+        --md-primary-variant: #5e7de8;
+        --md-accent: #4fd7a9;
+        --md-error: #ff7676;
+
+        --md-outline: #2b3240;
+        --md-outline-strong: #394155;
+
+        --md-elev-1: 0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35);
+        --md-elev-2: 0 6px 18px rgba(0,0,0,.45), 0 8px 28px rgba(0,0,0,.35);
+        --md-focus: 0 0 0 3px rgba(132,164,255,.22), 0 2px 14px rgba(132,164,255,.35);
+
+        --cell-bg: #161b26;
+        --cell-bg-alt: #151a25;
+        --cell-border: #2a3242;
+        --header-bg: #1a2240;
+        --header-text: #cfd8ff;
+
+        --tooltip-bg: rgba(8,10,14,.95);
+        --tooltip-text: #f8fbff;
+      }
+    }
+
+    html[data-theme="light"] {
+      color-scheme: light;
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--md-bg);
+      color: var(--md-text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    a { color: var(--md-primary); }
+
+    /* ===============================
+       Layout & App Bar
+       =============================== */
+    .app {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      min-height: 100svh;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .app-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--md-surface);
+      border: 1px solid var(--md-outline);
+      border-radius: var(--radius-l);
+      padding: 10px 12px;
+      box-shadow: var(--md-elev-1);
+    }
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .title .badge {
+      font-size: 12px;
+      padding: 2px 8px;
+      background: var(--md-surface-2);
+      border: 1px solid var(--md-outline);
+      border-radius: 999px;
+      color: var(--md-text-muted);
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--md-surface-2);
+      border: 1px solid var(--md-outline);
+      border-radius: var(--radius-m);
+      color: var(--md-text);
+      cursor: pointer;
+      user-select: none;
+      box-shadow: var(--md-elev-1);
+      transition: transform .05s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease, color .2s ease;
+    }
+    .btn:hover {
+      box-shadow: var(--md-elev-2);
+    }
+    .btn:active {
+      transform: translateY(1px) scale(.998);
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, var(--md-primary), var(--md-primary-variant));
+      color: #fff;
+      border-color: transparent;
+    }
+    .btn.ghost {
+      background: transparent;
+    }
+    .btn[disabled] {
+      opacity: .6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .icon {
+      width: 18px; height: 18px; display: inline-block;
+      filter: drop-shadow(0 0 0 rgba(0,0,0,0));
+    }
+
+    /* Tooltip */
+    .has-tooltip {
+      position: relative;
+    }
+    .has-tooltip[data-tooltip]:hover::after,
+    .has-tooltip[data-tooltip]:focus-visible::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -8px);
+      bottom: calc(100% + 8px);
+      background: var(--tooltip-bg);
+      color: var(--tooltip-text);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: pre-line;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      z-index: 9999;
+      max-width: 260px;
+    }
+    .has-tooltip[data-tooltip]:hover::before,
+    .has-tooltip[data-tooltip]:focus-visible::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 100%;
+      border: 8px solid transparent;
+      border-top-color: var(--tooltip-bg);
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.25));
+    }
+
+    /* ===============================
+       Toolbar & Formula bar
+       =============================== */
+    .toolbar, .formula {
+      background: var(--md-surface);
+      border: 1px solid var(--md-outline);
+      border-radius: var(--radius-l);
+      padding: 10px;
+      box-shadow: var(--md-elev-1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toolbar .group {
+      display: inline-flex;
+      gap: 8px;
+      padding: 6px;
+      background: var(--md-surface-2);
+      border: 1px solid var(--md-outline);
+      border-radius: 999px;
+    }
+    .formula label {
+      margin: 0 6px 0 2px;
+      color: var(--md-text-muted);
+      font-weight: 600;
+    }
+    .formula input {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--md-surface-2);
+      border: 1px solid var(--md-outline);
+      border-radius: var(--radius-m);
+      color: var(--md-text);
+      outline: none;
+      box-shadow: var(--md-elev-1);
+      transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .formula input:focus {
+      box-shadow: var(--md-focus);
+      border-color: var(--md-primary);
+      background: var(--md-surface);
+    }
+
+    /* ===============================
+       Spreadsheet Grid
+       =============================== */
+    .sheet-wrap {
+      background: var(--md-surface);
+      border: 1px solid var(--md-outline);
+      border-radius: var(--radius-l);
+      box-shadow: var(--md-elev-1);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 60svh;
+    }
+
+    .headers {
+      display: grid;
+      grid-template-columns: 48px auto;
+      background: var(--header-bg);
+      color: var(--header-text);
+      border-bottom: 1px solid var(--md-outline-strong);
+    }
+
+    .corner {
+      display: flex; align-items: center; justify-content: center;
+      border-right: 1px solid var(--md-outline-strong);
+      height: 36px;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    .col-headers {
+      position: relative;
+      display: grid;
+      height: 36px;
+      align-items: center;
+      /* columns set dynamically with JS via CSS variable */
+      grid-template-columns: var(--grid-cols);
+    }
+
+    .col-header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      border-right: 1px solid var(--md-outline-strong);
+      user-select: none;
+      font-weight: 600;
+    }
+    .col-header:last-child { border-right: none; }
+
+    .col-resize {
+      position: absolute;
+      top: 0; right: -3px;
+      width: 8px; height: 100%;
+      cursor: col-resize;
+      z-index: 10;
+    }
+    .col-resize:hover::after {
+      content: '';
+      position: absolute; top: 4px; bottom: 4px; left: 3px; width: 2px;
+      background: var(--md-primary);
+      border-radius: 1px;
+      opacity: .7;
+    }
+
+    .grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 48px var(--grid-cols);
+      grid-auto-rows: var(--row-height, 28px);
+      overflow: auto;
+      max-height: 70vh;
+      background: linear-gradient(180deg, var(--md-surface), var(--md-surface-2));
+    }
+
+    .row-header {
+      position: sticky;
+      left: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--header-bg);
+      color: var(--header-text);
+      border-right: 1px solid var(--md-outline-strong);
+      border-bottom: 1px solid var(--md-outline);
+      user-select: none;
+      font-weight: 600;
+      height: 100%;
+    }
+
+    .row-resize {
+      position: absolute;
+      left: 0; bottom: -3px; right: 0;
+      height: 8px;
+      cursor: row-resize;
+      z-index: 10;
+    }
+    .row-header-wrap {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+
+    .cell {
+      background: var(--cell-bg);
+      border-right: 1px solid var(--cell-border);
+      border-bottom: 1px solid var(--cell-border);
+      padding: 6px 8px;
+      outline: none;
+      min-width: 64px;
+      height: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .cell:nth-child(odd) { background: var(--cell-bg); }
+    .cell:focus {
+      box-shadow: var(--md-focus) inset, var(--md-focus);
+      border-color: var(--md-primary);
+      background: var(--md-surface);
+    }
+    .cell[contenteditable="true"] {
+      caret-color: var(--md-primary);
+    }
+    .cell.selected {
+      background: linear-gradient(180deg, rgba(61,109,242,.08), transparent);
+    }
+
+    .status {
+      padding: 10px 12px;
+      color: var(--md-text-muted);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .status .chip {
+      padding: 6px 10px;
+      background: var(--md-surface);
+      border: 1px solid var(--md-outline);
+      border-radius: 999px;
+      box-shadow: var(--md-elev-1);
+      color: var(--md-text-muted);
+    }
+
+    /* Drag line preview */
+    .drag-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--md-primary);
+      opacity: .85;
+      pointer-events: none;
+      z-index: 50;
+    }
+    .drag-line.row {
+      left: 0; right: 0; height: 2px; width: auto;
+    }
+
+    /* Helper visibility */
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- App Bar -->
+    <header class="app-bar" role="banner">
+      <div class="title">
+        <span>Spreadsheet</span>
+        <span class="badge">MD3</span>
+      </div>
+      <div class="actions">
+        <button id="themeToggle" class="btn ghost has-tooltip" data-tooltip="Toggle theme (Light/Dark)\nDefaults to system preference." aria-label="Toggle theme">
+          🌓 Theme
+        </button>
+        <button id="undoBtn" class="btn has-tooltip" data-tooltip="Undo last action\nCtrl/Cmd + Z" aria-label="Undo" disabled>↶ Undo</button>
+        <button id="redoBtn" class="btn has-tooltip" data-tooltip="Redo last undone action\nCtrl+Y or Ctrl/Cmd+Shift+Z" aria-label="Redo" disabled>↷ Redo</button>
+        <button id="saveBtn" class="btn primary has-tooltip" data-tooltip="Persist the sheet to IndexedDB\nShortcut: Ctrl/Cmd + S" aria-label="Save">💾 Save</button>
+        <button id="clearBtn" class="btn has-tooltip" data-tooltip="Clear all cells and dimensions.\nRemoves from IndexedDB too." aria-label="Clear form">🧹 Clear</button>
+        <button id="exportBtn" class="btn has-tooltip" data-tooltip="Export as structured Markdown (.md)\nIncludes metadata & grid content." aria-label="Export Markdown">⬇️ Export .md</button>
+      </div>
+    </header>
+
+    <!-- Toolbar -->
+    <section class="toolbar" role="group" aria-label="Toolbar">
+      <div class="group">
+        <span class="has-tooltip" data-tooltip="This is a mock toolbar group.\nAdd buttons as needed.">🧰</span>
+        <span class="has-tooltip" data-tooltip="Selection and formatting tools would go here.">🎛️</span>
+      </div>
+      <div class="group">
+        <span class="has-tooltip" data-tooltip="Keyboard navigation: arrows, Tab, Enter.\nDouble‑click a cell to edit.">⌨️</span>
+        <span class="has-tooltip" data-tooltip="Resize columns/rows: drag dividers in headers.">↔️</span>
+      </div>
+      <div class="group">
+        <span class="has-tooltip" data-tooltip="Cells are inline editable.\nUndo/Redo supported.">📝</span>
+      </div>
+    </section>
+
+    <!-- Formula Bar -->
+    <section class="formula" role="group" aria-label="Formula bar">
+      <label for="formulaInput">fx</label>
+      <input id="formulaInput" type="text" placeholder="Type here to set the active cell's value (no formulas in this mockup)" />
+    </section>
+
+    <!-- Sheet -->
+    <section class="sheet-wrap" aria-label="Spreadsheet">
+      <div class="headers">
+        <div class="corner has-tooltip" data-tooltip="Select All\n(placeholder)" aria-hidden="true">◻︎</div>
+        <div id="colHeaders" class="col-headers" aria-hidden="true"></div>
+      </div>
+      <div id="grid" class="grid" role="grid" aria-rowcount="20" aria-colcount="10" aria-label="Grid">
+        <!-- dynamically generated -->
+      </div>
+    </section>
+
+    <!-- Status -->
+    <footer class="status" role="status" aria-live="polite">
+      <div>
+        <span class="chip">Ready</span>
+        <span class="chip" id="statusSelection">Selected: —</span>
+      </div>
+      <div>
+        <span class="chip" id="statusDims">Cols: 10 | Rows: 20</span>
+        <span class="chip">Theme: <span id="statusTheme">Auto</span></span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    /***********************************************************
+     * Spreadsheet Mockup (MD3)
+     * - 10 cols (A-J), 20 rows (1-20)
+     * - Column/Row resizing
+     * - In-cell editing (contenteditable)
+     * - Undo/Redo (edits + resizes)
+     * - IndexedDB save/load, Clear, Export Markdown
+     * - Dark/Light theme + toggle
+     ***********************************************************/
+    const COL_COUNT = 10;
+    const ROW_COUNT = 20;
+    const MIN_COL_W = 64;
+    const MIN_ROW_H = 24;
+    const SNAP = 4;
+
+    /*** Utilities ***/
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+    const letter = i => String.fromCharCode(65 + i); // 0->A
+    const cellKey = (c, r) => `${letter(c)}${r+1}`;
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    const snap = v => Math.round(v / SNAP) * SNAP;
+
+    /*** State ***/
+    const state = {
+      theme: 'auto',
+      cols: Array.from({length: COL_COUNT}, _ => 96),
+      rows: Array.from({length: ROW_COUNT}, _ => 28),
+      cells: {}, // { "A1": "value", ... }
+      selection: { col: 0, row: 0 },
+      stacks: {
+        undo: [],
+        redo: [],
+        cap: 200
+      }
+    };
+
+    /*** DOM refs ***/
+    const grid = $('#grid');
+    const colHeaders = $('#colHeaders');
+    const formulaInput = $('#formulaInput');
+    const themeToggle = $('#themeToggle');
+    const statusSelection = $('#statusSelection');
+    const statusTheme = $('#statusTheme');
+    const undoBtn = $('#undoBtn');
+    const redoBtn = $('#redoBtn');
+    const saveBtn = $('#saveBtn');
+    const clearBtn = $('#clearBtn');
+    const exportBtn = $('#exportBtn');
+
+    /*** Theme ***/
+    function loadTheme() {
+      const saved = localStorage.getItem('md3-sheet-theme');
+      state.theme = saved || 'auto';
+      applyTheme();
+    }
+    function applyTheme() {
+      document.documentElement.setAttribute('data-theme', state.theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : state.theme);
+      statusTheme.textContent = state.theme === 'auto' ? 'Auto' : (document.documentElement.getAttribute('data-theme') === 'dark' ? 'Dark' : 'Light');
+    }
+    themeToggle.addEventListener('click', () => {
+      if (state.theme === 'auto') state.theme = 'dark';
+      else if (state.theme === 'dark') state.theme = 'light';
+      else state.theme = 'auto';
+      localStorage.setItem('md3-sheet-theme', state.theme);
+      applyTheme();
+    });
+
+    /*** Grid Building ***/
+    function setGridColumns() {
+      const cols = state.cols.map(px => `${px}px`).join(' ');
+      colHeaders.style.setProperty('--grid-cols', cols);
+      grid.style.setProperty('--grid-cols', cols);
+    }
+
+    function buildHeaders() {
+      colHeaders.innerHTML = '';
+      for (let c = 0; c < COL_COUNT; c++) {
+        const h = document.createElement('div');
+        h.className = 'col-header';
+        h.setAttribute('data-col', c);
+        h.textContent = letter(c);
+
+        const handle = document.createElement('div');
+        handle.className = 'col-resize has-tooltip';
+        handle.setAttribute('data-tooltip', 'Drag to resize column');
+        handle.setAttribute('role', 'separator');
+        handle.setAttribute('aria-orientation', 'vertical');
+        handle.addEventListener('pointerdown', startColResize);
+        h.appendChild(handle);
+
+        colHeaders.appendChild(h);
+      }
+    }
+
+    function buildGrid() {
+      grid.innerHTML = '';
+      grid.style.setProperty('--row-height', `${state.rows[0]}px`); // default, but we set per-row below using inline styles
+
+      for (let r = 0; r < ROW_COUNT; r++) {
+        // Row header
+        const rh = document.createElement('div');
+        rh.className = 'row-header';
+        rh.setAttribute('data-row', r);
+
+        const wrap = document.createElement('div');
+        wrap.className = 'row-header-wrap';
+        wrap.textContent = r + 1;
+
+        const rHandle = document.createElement('div');
+        rHandle.className = 'row-resize has-tooltip';
+        rHandle.setAttribute('data-tooltip', 'Drag to resize row');
+        rHandle.setAttribute('role', 'separator');
+        rHandle.setAttribute('aria-orientation', 'horizontal');
+        rHandle.addEventListener('pointerdown', startRowResize);
+
+        wrap.appendChild(rHandle);
+        rh.appendChild(wrap);
+
+        // Apply row height
+        rh.style.height = state.rows[r] + 'px';
+        grid.appendChild(rh);
+
+        // Cells
+        for (let c = 0; c < COL_COUNT; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.contentEditable = 'true';
+          cell.setAttribute('role', 'gridcell');
+          cell.setAttribute('data-col', c);
+          cell.setAttribute('data-row', r);
+          cell.setAttribute('aria-colindex', c + 1);
+          cell.setAttribute('aria-rowindex', r + 1);
+          const key = cellKey(c, r);
+          if (state.cells[key] != null) cell.textContent = state.cells[key];
+
+          cell.addEventListener('focus', onCellFocus);
+          cell.addEventListener('blur', onCellBlurCommit);
+          cell.addEventListener('keydown', onCellKeydown);
+          cell.addEventListener('input', onCellInputLive);
+
+          grid.appendChild(cell);
+
+          // Ensure row height applies to cells in this row
+          cell.style.height = state.rows[r] + 'px';
+        }
+      }
+    }
+
+    function updateStatusSelection() {
+      const { col, row } = state.selection;
+      statusSelection.textContent = `Selected: ${letter(col)}${row + 1}`;
+    }
+
+    /*** Selection / Formula bar ***/
+    function setSelection(col, row) {
+      state.selection = { col, row };
+      updateStatusSelection();
+      const key = cellKey(col, row);
+      formulaInput.value = state.cells[key] ?? '';
+      // Visual selection (soft)
+      $$('.cell.selected').forEach(n => n.classList.remove('selected'));
+      const node = getCellNode(col, row);
+      if (node) node.classList.add('selected');
+    }
+
+    formulaInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        commitValueToActive(formulaInput.value);
+        const nextRow = clamp(state.selection.row + 1, 0, ROW_COUNT - 1);
+        setSelection(state.selection.col, nextRow);
+        getCellNode(state.selection.col, nextRow)?.focus();
+      }
+    });
+    formulaInput.addEventListener('input', () => {
+      // Mirror to focused cell live (non-commit)
+      const n = getCellNode(state.selection.col, state.selection.row);
+      if (n) n.textContent = formulaInput.value;
+    });
+
+    function getCellNode(c, r) {
+      return grid.querySelector(`.cell[data-col="${c}"][data-row="${r}"]`);
+    }
+
+    /*** Editing & Undo/Redo ***/
+    function pushUndo(entry) {
+      state.stacks.undo.push(entry);
+      if (state.stacks.undo.length > state.stacks.cap) state.stacks.undo.shift();
+      state.stacks.redo = [];
+      refreshUndoRedoButtons();
+    }
+    function refreshUndoRedoButtons() {
+      undoBtn.disabled = state.stacks.undo.length === 0;
+      redoBtn.disabled = state.stacks.redo.length === 0;
+    }
+    function applyAction(action, dir = 'forward') {
+      // action: {type, payload, inverse}
+      switch (action.type) {
+        case 'editCell': {
+          const { addr, oldValue, newValue } = (dir === 'forward') ? action.payload : action.inverse;
+          state.cells[addr] = newValue;
+          const [cLetter, rStr] = [addr.match(/[A-Z]+/)[0], addr.match(/\d+/)[0]];
+          const c = cLetter.charCodeAt(0) - 65, r = parseInt(rStr, 10) - 1;
+          const node = getCellNode(c, r);
+          if (node) node.textContent = newValue ?? '';
+          if (addr === cellKey(state.selection.col, state.selection.row)) {
+            formulaInput.value = newValue ?? '';
+          }
+          break;
+        }
+        case 'resizeColumn': {
+          const { col, oldWidth, newWidth } = (dir === 'forward') ? action.payload : action.inverse;
+          state.cols[col] = newWidth;
+          setGridColumns();
+          break;
+        }
+        case 'resizeRow': {
+          const { row, oldHeight, newHeight } = (dir === 'forward') ? action.payload : action.inverse;
+          state.rows[row] = newHeight;
+          // update all nodes in that row
+          const rNodes = grid.querySelectorAll(`.cell[data-row="${row}"], .row-header[data-row="${row}"]`);
+          rNodes.forEach(n => n.style.height = newHeight + 'px');
+          break;
+        }
+      }
+    }
+
+    function commitValueToActive(value) {
+      const addr = cellKey(state.selection.col, state.selection.row);
+      const oldValue = state.cells[addr] ?? '';
+      const newValue = value ?? '';
+      if (oldValue === newValue) return;
+      const action = {
+        type: 'editCell',
+        payload: { addr, oldValue, newValue },
+        inverse: { addr, oldValue: newValue, newValue: oldValue },
+        meta: { selectionBefore: {...state.selection}, selectionAfter: {...state.selection} }
+      };
+      applyAction(action, 'forward');
+      pushUndo(action);
+    }
+
+    function onCellFocus(e) {
+      const c = +e.currentTarget.getAttribute('data-col');
+      const r = +e.currentTarget.getAttribute('data-row');
+      setSelection(c, r);
+    }
+    function onCellBlurCommit(e) {
+      const c = +e.currentTarget.getAttribute('data-col');
+      const r = +e.currentTarget.getAttribute('data-row');
+      const addr = cellKey(c, r);
+      const newValue = e.currentTarget.textContent || '';
+      const oldValue = state.cells[addr] ?? '';
+      if (oldValue === newValue) return;
+      const action = {
+        type: 'editCell',
+        payload: { addr, oldValue, newValue },
+        inverse: { addr, oldValue: newValue, newValue: oldValue },
+        meta: { selectionBefore: {col: c, row: r}, selectionAfter: {col: c, row: r} }
+      };
+      applyAction(action, 'forward');
+      pushUndo(action);
+    }
+    function onCellKeydown(e) {
+      const c = +e.currentTarget.getAttribute('data-col');
+      const r = +e.currentTarget.getAttribute('data-row');
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.currentTarget.blur();
+        const next = clamp(r + 1, 0, ROW_COUNT - 1);
+        setSelection(c, next);
+        getCellNode(c, next)?.focus();
+      } else if (e.key === 'Tab') {
+        e.preventDefault();
+        const next = clamp(c + (e.shiftKey ? -1 : 1), 0, COL_COUNT - 1);
+        setSelection(next, r);
+        getCellNode(next, r)?.focus();
+      } else if (e.key === 'Escape') {
+        document.activeElement?.blur();
+      } else if (e.key === 'ArrowDown' && !e.shiftKey && !e.altKey && !e.metaKey && !e.ctrlKey && !e.currentTarget.isContentEditable) {
+        setSelection(c, clamp(r + 1, 0, ROW_COUNT - 1));
+      }
+    }
+    function onCellInputLive(e) {
+      // Mirror to formula bar while typing
+      formulaInput.value = e.currentTarget.textContent || '';
+    }
+
+    /*** Undo/Redo buttons & shortcuts ***/
+    undoBtn.addEventListener('click', () => {
+      const action = state.stacks.undo.pop();
+      if (!action) return;
+      state.stacks.redo.push(action);
+      applyAction(action, 'inverse');
+      // restore selection if available
+      if (action.meta?.selectionBefore) {
+        const { col, row } = action.meta.selectionBefore;
+        setSelection(col, row);
+      }
+      refreshUndoRedoButtons();
+    });
+    redoBtn.addEventListener('click', () => {
+      const action = state.stacks.redo.pop();
+      if (!action) return;
+      state.stacks.undo.push(action);
+      applyAction(action, 'forward');
+      if (action.meta?.selectionAfter) {
+        const { col, row } = action.meta.selectionAfter;
+        setSelection(col, row);
+      }
+      refreshUndoRedoButtons();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        saveToDB();
+      } else if (mod && !e.shiftKey && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        undoBtn.click();
+      } else if ((mod && e.shiftKey && e.key.toLowerCase() === 'z') || (mod && e.key.toLowerCase() === 'y')) {
+        e.preventDefault();
+        redoBtn.click();
+      }
+    });
+
+    /*** Resizing ***/
+    let colDrag = null; // { col, startX, startW, line }
+    function startColResize(e) {
+      const col = +e.currentTarget.parentElement.getAttribute('data-col');
+      colDrag = {
+        col,
+        startX: e.clientX,
+        startW: state.cols[col],
+        line: document.createElement('div')
+      };
+      colDrag.line.className = 'drag-line';
+      const rect = grid.getBoundingClientRect();
+      colDrag.line.style.left = (e.clientX - rect.left) + 'px';
+      grid.appendChild(colDrag.line);
+      window.addEventListener('pointermove', onColResizeMove);
+      window.addEventListener('pointerup', endColResize, { once: true });
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+    function onColResizeMove(e) {
+      if (!colDrag) return;
+      const rect = grid.getBoundingClientRect();
+      colDrag.line.style.left = (e.clientX - rect.left) + 'px';
+      const dx = e.clientX - colDrag.startX;
+      const w = snap(clamp(colDrag.startW + dx, MIN_COL_W, 800));
+      state.cols[colDrag.col] = w;
+      setGridColumns();
+    }
+    function endColResize(e) {
+      if (!colDrag) return;
+      const finalW = state.cols[colDrag.col];
+      const action = {
+        type: 'resizeColumn',
+        payload: { col: colDrag.col, oldWidth: colDrag.startW, newWidth: finalW },
+        inverse: { col: colDrag.col, oldWidth: finalW, newWidth: colDrag.startW },
+        meta: {}
+      };
+      pushUndo(action);
+      colDrag.line.remove();
+      colDrag = null;
+      window.removeEventListener('pointermove', onColResizeMove);
+    }
+
+    let rowDrag = null; // { row, startY, startH, line }
+    function startRowResize(e) {
+      const row = +e.currentTarget.parentElement.parentElement.getAttribute('data-row');
+      const rect = grid.getBoundingClientRect();
+      rowDrag = {
+        row,
+        startY: e.clientY,
+        startH: state.rows[row],
+        line: document.createElement('div')
+      };
+      rowDrag.line.className = 'drag-line row';
+      rowDrag.line.style.top = (e.clientY - rect.top) + 'px';
+      grid.appendChild(rowDrag.line);
+      window.addEventListener('pointermove', onRowResizeMove);
+      window.addEventListener('pointerup', endRowResize, { once: true });
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+    function onRowResizeMove(e) {
+      if (!rowDrag) return;
+      const rect = grid.getBoundingClientRect();
+      rowDrag.line.style.top = (e.clientY - rect.top) + 'px';
+      const dy = e.clientY - rowDrag.startY;
+      const h = snap(clamp(rowDrag.startH + dy, MIN_ROW_H, 200));
+      state.rows[rowDrag.row] = h;
+      // update all nodes in this row
+      const rNodes = grid.querySelectorAll(`.cell[data-row="${rowDrag.row}"], .row-header[data-row="${rowDrag.row}"]`);
+      rNodes.forEach(n => n.style.height = h + 'px');
+    }
+    function endRowResize(e) {
+      if (!rowDrag) return;
+      const finalH = state.rows[rowDrag.row];
+      const action = {
+        type: 'resizeRow',
+        payload: { row: rowDrag.row, oldHeight: rowDrag.startH, newHeight: finalH },
+        inverse: { row: rowDrag.row, oldHeight: finalH, newHeight: rowDrag.startH },
+        meta: {}
+      };
+      pushUndo(action);
+      rowDrag.line.remove();
+      rowDrag = null;
+      window.removeEventListener('pointermove', onRowResizeMove);
+    }
+
+    /*** IndexedDB Persistence ***/
+    const DB_NAME = 'md3-sheet-db';
+    const DB_STORE = 'sheets';
+    const DB_KEY = 'sheet-1';
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE);
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+    async function dbSet(key, value) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_STORE, 'readwrite');
+        tx.objectStore(DB_STORE).put(value, key);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+    async function dbGet(key) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_STORE, 'readonly');
+        const req = tx.objectStore(DB_STORE).get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+    async function dbDel(key) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_STORE, 'readwrite');
+        tx.objectStore(DB_STORE).delete(key);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function saveToDB() {
+      // Snapshot current values
+      const snapshot = {
+        cols: [...state.cols],
+        rows: [...state.rows],
+        cells: {...state.cells},
+        selection: {...state.selection},
+        meta: {
+          savedAt: new Date().toISOString(),
+          colCount: COL_COUNT,
+          rowCount: ROW_COUNT
+        }
+      };
+      await dbSet(DB_KEY, snapshot);
+      pulse(saveBtn);
+    }
+
+    async function loadFromDB() {
+      const data = await dbGet(DB_KEY);
+      if (!data) return false;
+      state.cols = data.cols || state.cols;
+      state.rows = data.rows || state.rows;
+      state.cells = data.cells || {};
+      state.selection = data.selection || { col: 0, row: 0 };
+      return true;
+    }
+
+    async function clearForm() {
+      state.cells = {};
+      state.cols = Array.from({length: COL_COUNT}, _ => 96);
+      state.rows = Array.from({length: ROW_COUNT}, _ => 28);
+      state.stacks.undo = [];
+      state.stacks.redo = [];
+      await dbDel(DB_KEY);
+      rebuildAll();
+      pulse(clearBtn);
+    }
+
+    /*** Export Markdown ***/
+    function exportMarkdown() {
+      const lines = [];
+      lines.push('---');
+      lines.push(`title: Spreadsheet Export`);
+      lines.push(`exportedAt: ${new Date().toISOString()}`);
+      lines.push(`columns: ${COL_COUNT}`);
+      lines.push(`rows: ${ROW_COUNT}`);
+      lines.push('---');
+      lines.push('');
+      lines.push('## Dimensions');
+      lines.push('');
+      lines.push('- ColumnWidths(px): ' + state.cols.join(', '));
+      lines.push('- RowHeights(px): ' + state.rows.join(', '));
+      lines.push('');
+      lines.push('## Grid (A1 notation)');
+      lines.push('');
+      // Header row
+      const headers = ['#'].concat(Array.from({length: COL_COUNT}, (_, c) => letter(c)));
+      lines.push('|' + headers.join('|') + '|');
+      lines.push('|' + headers.map(()=>'---').join('|') + '|');
+      // Rows
+      for (let r = 0; r < ROW_COUNT; r++) {
+        const rowCells = [String(r+1)];
+        for (let c = 0; c < COL_COUNT; c++) {
+          const key = cellKey(c, r);
+          let val = state.cells[key] ?? '';
+          // Escape pipes
+          val = String(val).replace(/\|/g, '\\|');
+          rowCells.push(val);
+        }
+        lines.push('|' + rowCells.join('|') + '|');
+      }
+      const md = lines.join('\n');
+      const blob = new Blob([md], {type: 'text/markdown;charset=utf-8'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `spreadsheet-${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.md`;
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(a.href);
+      a.remove();
+      pulse(exportBtn);
+    }
+
+    /*** Helpers ***/
+    function pulse(node) {
+      node.style.boxShadow = '0 0 0 3px rgba(34,176,125,.35), var(--md-elev-2)';
+      setTimeout(()=> node.style.boxShadow = '', 300);
+    }
+
+    /*** Build & Init ***/
+    function rebuildAll() {
+      setGridColumns();
+      buildHeaders();
+      buildGrid();
+      setSelection(state.selection.col, state.selection.row);
+      refreshUndoRedoButtons();
+      $('#statusDims').textContent = `Cols: ${COL_COUNT} | Rows: ${ROW_COUNT}`;
+    }
+
+    /*** Wire Actions ***/
+    saveBtn.addEventListener('click', saveToDB);
+    clearBtn.addEventListener('click', clearForm);
+    exportBtn.addEventListener('click', exportMarkdown);
+
+    /*** Start ***/
+    (async function start() {
+      loadTheme();
+      await loadFromDB();
+      rebuildAll();
+      // Focus initial cell
+      getCellNode(state.selection.col, state.selection.row)?.focus();
+    })();
+  </script>
+</body>
+</html>
