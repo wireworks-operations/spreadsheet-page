@@ -9,13 +9,13 @@
 :root { --bg-color:#fff; --text-color:#000; --primary-color:#6200ee; --on-primary:#fff; }
 [data-theme='dark'] { --bg-color:#121212; --text-color:#fff; --primary-color:#bb86fc; --on-primary:#000; }
 body { background-color:var(--bg-color); color:var(--text-color); font-family:'Roboto',sans-serif; margin:20px; }
-h1{text-align:center;} .toolbar-container{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:flex-start;background:var(--primary-color);color:var(--on-primary);padding:10px;border-radius:8px 8px 0 0;transform:translateY(100%);transition:transform .3s ease;} .toolbar-container.expanded{transform:translateY(0);} .toolbar-container button{background:none;border:none;color:var(--on-primary);font-size:24px;margin-right:16px;cursor:pointer;} .toolbar-toggle{position:fixed;bottom:10px;right:10px;background:var(--primary-color);color:var(--on-primary);border:none;padding:12px;border-radius:50%;cursor:pointer;font-size:24px;} .md-button{background:var(--primary-color);color:var(--on-primary);border:none;padding:8px 16px;border-radius:50px;cursor:pointer;font-size:14px;margin-right:8px;} .md-button:hover{background:#3700b3;} table{width:100%;border-collapse:collapse;margin-top:10px;} th,td{border:1px solid #ccc;padding:8px;text-align:left;} th{resize:horizontal;overflow:auto;} td[contenteditable='true']{cursor:text;}
+h1{text-align:center;} .toolbar-container{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:flex-start;background:var(--primary-color);color:var(--on-primary);padding:10px;border-radius:16px 16px 0 0;transform:translateY(100%);transition:transform .3s cubic-bezier(0.4, 0, 0.2, 1);box-shadow: 0 -4px 12px rgba(0,0,0,0.15);z-index: 1000;} .toolbar-container.expanded{transform:translateY(0);} .toolbar-container button{background:none;border:none;color:var(--on-primary);font-size:24px;margin-right:8px;cursor:pointer;transition: transform 0.2s; display: flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; border-radius: 50%; padding: 4px;} .toolbar-container button:hover{background: rgba(255,255,255,0.1); transform: scale(1.1);} .toolbar-toggle{position:fixed;bottom:16px;right:16px;background:var(--primary-color);color:var(--on-primary);border:none;padding:12px;border-radius:50%;cursor:pointer;font-size:24px;box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: all 0.3s; z-index: 1001;} .toolbar-toggle:hover{background:#3700b3; box-shadow: 0 6px 10px rgba(0,0,0,0.3); transform: rotate(90deg);} .md-button{background:var(--primary-color);color:var(--on-primary);border:none;padding:8px 16px;border-radius:50px;cursor:pointer;font-size:14px;margin-right:8px;transition: background 0.2s, box-shadow 0.2s; white-space: nowrap;} .md-button:hover{background:#3700b3; box-shadow: 0 2px 4px rgba(0,0,0,0.2);} .search-box{background: var(--bg-color); color: var(--text-color); border: 1px solid var(--primary-color); } .search-box::placeholder{color: var(--text-color); opacity: 0.7;} table{width:100%;border-collapse:collapse;margin-top:10px;box-shadow: 0 1px 3px rgba(0,0,0,0.1);} th,td{border:1px solid #ccc;padding:12px 8px;text-align:left;transition: background 0.1s;} th{background: var(--bg-color); resize:horizontal;overflow:auto;font-weight: 600;} td[contenteditable='true']{cursor:text;} td:hover, th:hover:not(.selected){background-color: rgba(0,0,0,0.04);} [data-theme='dark'] td:hover, [data-theme='dark'] th:hover:not(.selected){background-color: rgba(255,255,255,0.04);} .selected{background-color: rgba(98, 0, 238, 0.12) !important; outline: 2px solid var(--primary-color); outline-offset: -2px;} [data-theme='dark'] .selected{background-color: rgba(187, 134, 252, 0.15) !important;}
 </style>
 </head>
 <body>
 <h1>Interactive Excel - Material Design</h1>
-<input type='text' id='searchBox' placeholder='Search...' class='md-button'>
-<button class='md-button' onclick='toggleDarkMode()'>Toggle Dark Mode</button>
+<input type='text' id='searchBox' placeholder='Search...' class='md-button search-box' aria-label='Search table'>
+<button class='md-button' onclick='toggleDarkMode()' aria-label='Toggle Dark Mode' title='Toggle Dark Mode'>Toggle Dark Mode</button>
 <section id='Sheet1'>
 <h2 contenteditable='true'>Sheet1</h2>
 <table class='editable-table'><thead><tr><th contenteditable='true'>Column 1</th><th contenteditable='true'>Column 2</th></tr></thead><tbody><tr><td contenteditable='true'></td><td contenteditable='true'></td></tr></tbody></table>
@@ -28,28 +28,33 @@ h1{text-align:center;} .toolbar-container{position:fixed;bottom:0;left:0;width:1
 <button class='md-button' onclick='deleteSheet(this)'>Delete Sheet</button>
 </div>
 </section>
-<div class='toolbar-container' id='toolbar'>
-<button title='Copy' onclick='copySelection()'><span class='material-icons'>content_copy</span></button>
-<button title='Paste' onclick='pasteSelection()'><span class='material-icons'>content_paste</span></button>
-<button title='Delete Cells' onclick='deleteSelection()'><span class='material-icons'>delete</span></button>
-<button title='Delete Rows' onclick='deleteSelectedRows()'><span class='material-icons'>table_rows</span></button>
-<button title='Delete Columns' onclick='deleteSelectedColumns()'><span class='material-icons'>view_column</span></button>
-<input type='color' id='colorPicker' title='Pick a color'>
-<button title='Apply Color' onclick='applyColor()'><span class='material-icons'>format_color_fill</span></button>
-<button title='Reset Color' onclick='resetColor()'><span class='material-icons'>format_clear</span></button>
-<button title='Export' onclick='exportWithColors()'><span class='material-icons'>download</span></button>
-<button title='New Sheet' onclick='createSheet()'><span class='material-icons'>add</span></button>
+<div class='toolbar-container' id='toolbar' role='toolbar' aria-label='Table actions'>
+<button title='Copy' onclick='copySelection()' aria-label='Copy selection'><span class='material-icons'>content_copy</span></button>
+<button title='Paste' onclick='pasteSelection()' aria-label='Paste selection'><span class='material-icons'>content_paste</span></button>
+<button title='Delete Cells' onclick='deleteSelection()' aria-label='Delete selected cells'><span class='material-icons'>delete</span></button>
+<button title='Delete Rows' onclick='deleteSelectedRows()' aria-label='Delete selected rows'><span class='material-icons'>table_rows</span></button>
+<button title='Delete Columns' onclick='deleteSelectedColumns()' aria-label='Delete selected columns'><span class='material-icons'>view_column</span></button>
+<input type='color' id='colorPicker' title='Pick a color' aria-label='Pick a color'>
+<button title='Apply Color' onclick='applyColor()' aria-label='Apply color to selection'><span class='material-icons'>format_color_fill</span></button>
+<button title='Reset Color' onclick='resetColor()' aria-label='Reset cell color'><span class='material-icons'>format_clear</span></button>
+<button title='Export' onclick='exportWithColors()' aria-label='Export as HTML'><span class='material-icons'>download</span></button>
+<button title='New Sheet' onclick='createSheet()' aria-label='Create new sheet'><span class='material-icons'>add</span></button>
 </div>
-<button class='toolbar-toggle' onclick='toggleToolbar()'><span class='material-icons'>settings</span></button>
+<button class='toolbar-toggle' id='toolbar-toggle' onclick='toggleToolbar()' aria-label='Toggle toolbar' aria-expanded='false' title='Toggle toolbar'><span class='material-icons'>settings</span></button>
 <script>
-function toggleToolbar(){document.getElementById('toolbar').classList.toggle('expanded');}
+function toggleToolbar(){
+const toolbar = document.getElementById('toolbar');
+const toggleBtn = document.getElementById('toolbar-toggle');
+const isExpanded = toolbar.classList.toggle('expanded');
+toggleBtn.setAttribute('aria-expanded', isExpanded);
+}
 function toggleDarkMode(){document.body.dataset.theme=document.body.dataset.theme==='dark'?'light':'dark';}
 let selectedCells=[];document.addEventListener('click',function(e){if(e.target.tagName==='TD'||e.target.tagName==='TH'){e.target.classList.toggle('selected');if(selectedCells.includes(e.target)){selectedCells=selectedCells.filter(c=>c!==e.target);}else{selectedCells.push(e.target);}}});
 function addRow(btn){const table=btn.closest('section').querySelector('table');const cols=table.querySelector('thead tr').children.length;const newRow=document.createElement('tr');for(let i=0;i<cols;i++){const cell=document.createElement('td');cell.contentEditable='true';newRow.appendChild(cell);}table.querySelector('tbody').appendChild(newRow);}
 function deleteRow(btn){const table=btn.closest('section').querySelector('table');const rows=table.querySelector('tbody').rows;if(rows.length>0)rows[rows.length-1].remove();}
 function addColumn(btn){const table=btn.closest('section').querySelector('table');const headerRow=table.querySelector('thead tr');const newHeader=document.createElement('th');newHeader.contentEditable='true';newHeader.textContent='New Column';headerRow.appendChild(newHeader);table.querySelectorAll('tbody tr').forEach(row=>{const cell=document.createElement('td');cell.contentEditable='true';row.appendChild(cell);});}
 function deleteColumn(btn){const table=btn.closest('section').querySelector('table');const headers=table.querySelector('thead tr').children;if(headers.length>0){const index=headers.length-1;headers[index].remove();table.querySelectorAll('tbody tr').forEach(row=>row.children[index].remove());}}
-function mergeCells(){if(selectedCells.length>1){const mergedText=selectedCells.map(c=>c.innerText).join(' ');const firstCell=selectedCells[0];firstCell.innerText=mergedText;selectedCells.slice(1).forEach(c=>c.remove());selectedCells=[];}}
+function mergeCells(){if(selectedCells.length>1){const mergedText=selectedCells.map(c=>c.innerText).join(' ');const firstCell=selectedCells[0];firstCell.innerText=mergedText;selectedCells.slice(1).forEach(c=>c.remove());selectedCells.forEach(c=>c.classList.remove('selected'));selectedCells=[];}}
 function deleteSheet(btn){const section=btn.closest('section');section.remove();}
 function createSheet(){const sheetName='Sheet'+(document.querySelectorAll('section').length+1);const newSection=`<section id='${sheetName}'><h2 contenteditable='true'>${sheetName}</h2><table class='editable-table'><thead><tr><th contenteditable='true'>Column 1</th></tr></thead><tbody><tr><td contenteditable='true'></td></tr></tbody></table><div class='controls'><button class='md-button' onclick="addRow(this)">Add Row</button><button class='md-button' onclick="deleteRow(this)">Delete Last Row</button><button class='md-button' onclick="addColumn(this)">Add Column</button><button class='md-button' onclick="deleteColumn(this)">Delete Last Column</button><button class='md-button' onclick="mergeCells()">Merge Selected Cells</button><button class='md-button' onclick="deleteSheet(this)">Delete Sheet</button></div></section>`;document.body.insertAdjacentHTML('beforeend',newSection);}
 function copySelection(){const text=selectedCells.map(c=>c.innerText).join('	');navigator.clipboard.writeText(text);}
