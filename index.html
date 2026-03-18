@@ -14,7 +14,7 @@ h1{text-align:center;} .toolbar-container{position:fixed;bottom:0;left:0;width:1
 </head>
 <body>
 <h1>Interactive Excel - Material Design</h1>
-<input type='text' id='searchBox' placeholder='Search...' class='md-button search-box' aria-label='Search table'>
+<input type='text' id='searchBox' placeholder='Search...' class='md-button search-box' aria-label='Search table' oninput='searchTable()'>
 <button class='md-button' onclick='toggleDarkMode()' aria-label='Toggle Dark Mode' title='Toggle Dark Mode'>Toggle Dark Mode</button>
 <section id='Sheet1'>
 <h2 contenteditable='true'>Sheet1</h2>
@@ -65,6 +65,7 @@ function deleteSelectedColumns(){const tables=new Set(selectedCells.map(c=>c.clo
 function applyColor(){const color=document.getElementById('colorPicker').value;selectedCells.forEach(c=>c.style.backgroundColor=color);}
 function resetColor(){selectedCells.forEach(c=>c.style.backgroundColor='');}
 function exportWithColors(){const htmlContent=document.documentElement.outerHTML;const blob=new Blob([htmlContent],{type:'text/html;charset=utf-8;'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='excel_blank.html';link.click();}
+function searchTable(){const filter=document.getElementById('searchBox').value.toLowerCase();document.querySelectorAll('section table tbody tr').forEach(row=>{const text=row.innerText.toLowerCase();row.style.display=text.includes(filter)?'':'none';});}
 </script>
 </body>
 </html>
