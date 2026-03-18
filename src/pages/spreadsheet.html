@@ -4,6 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';">
+  <meta name="referrer" content="no-referrer">
   <title>MD3 Spreadsheet Mockup</title>
   <style>
     /* ===============================
@@ -954,13 +956,38 @@
     }
 
     async function loadFromDB() {
-      const data = await dbGet(DB_KEY);
-      if (!data) return false;
-      state.cols = data.cols || state.cols;
-      state.rows = data.rows || state.rows;
-      state.cells = data.cells || {};
-      state.selection = data.selection || { col: 0, row: 0 };
-      return true;
+      try {
+        const data = await dbGet(DB_KEY);
+        if (!data) return false;
+
+        // Basic validation for loaded data
+        if (Array.isArray(data.cols) && data.cols.length === COL_COUNT) {
+          state.cols = data.cols.map(w => typeof w === 'number' ? clamp(w, MIN_COL_W, 800) : 96);
+        }
+        if (Array.isArray(data.rows) && data.rows.length === ROW_COUNT) {
+          state.rows = data.rows.map(h => typeof h === 'number' ? clamp(h, MIN_ROW_H, 200) : 28);
+        }
+        if (data.cells && typeof data.cells === 'object') {
+          // Only take keys that match expected A1-style pattern to prevent pollution
+          const validatedCells = {};
+          Object.keys(data.cells).forEach(key => {
+            if (/^[A-Z]+\d+$/.test(key)) {
+              validatedCells[key] = String(data.cells[key]);
+            }
+          });
+          state.cells = validatedCells;
+        }
+        if (data.selection && typeof data.selection.col === 'number' && typeof data.selection.row === 'number') {
+          state.selection = {
+            col: clamp(data.selection.col, 0, COL_COUNT - 1),
+            row: clamp(data.selection.row, 0, ROW_COUNT - 1)
+          };
+        }
+        return true;
+      } catch (e) {
+        console.error('Failed to load from IndexedDB:', e);
+        return false;
+      }
     }
 
     async function clearForm() {
