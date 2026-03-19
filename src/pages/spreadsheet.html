@@ -4,9 +4,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline';">
   <meta name="referrer" content="no-referrer">
   <title>MD3 Spreadsheet Mockup</title>
+  <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
   <style>
     /* ===============================
        Material Design 3 - Inspired
@@ -139,6 +140,7 @@
     .btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       padding: 8px 12px;
       background: var(--md-surface-2);
@@ -163,6 +165,10 @@
     }
     .btn.ghost {
       background: transparent;
+    }
+    .btn:focus-visible {
+      outline: 3px solid var(--md-primary);
+      outline-offset: 2px;
     }
     .btn[disabled] {
       opacity: .6;
@@ -425,28 +431,28 @@
       </div>
       <div class="actions">
         <button id="themeToggle" class="btn ghost has-tooltip" data-tooltip="Toggle theme (Light/Dark)\nDefaults to system preference." aria-label="Toggle theme">
-          🌓 Theme
+          <span class="material-icons">brightness_4</span> Theme
         </button>
-        <button id="undoBtn" class="btn has-tooltip" data-tooltip="Undo last action\nCtrl/Cmd + Z" aria-label="Undo" disabled>↶ Undo</button>
-        <button id="redoBtn" class="btn has-tooltip" data-tooltip="Redo last undone action\nCtrl+Y or Ctrl/Cmd+Shift+Z" aria-label="Redo" disabled>↷ Redo</button>
-        <button id="saveBtn" class="btn primary has-tooltip" data-tooltip="Persist the sheet to IndexedDB\nShortcut: Ctrl/Cmd + S" aria-label="Save">💾 Save</button>
-        <button id="clearBtn" class="btn has-tooltip" data-tooltip="Clear all cells and dimensions.\nRemoves from IndexedDB too." aria-label="Clear form">🧹 Clear</button>
-        <button id="exportBtn" class="btn has-tooltip" data-tooltip="Export as structured Markdown (.md)\nIncludes metadata & grid content." aria-label="Export Markdown">⬇️ Export .md</button>
+        <button id="undoBtn" class="btn has-tooltip" data-tooltip="Undo last action\nCtrl/Cmd + Z" aria-label="Undo" disabled><span class="material-icons">undo</span> Undo</button>
+        <button id="redoBtn" class="btn has-tooltip" data-tooltip="Redo last undone action\nCtrl+Y or Ctrl/Cmd+Shift+Z" aria-label="Redo" disabled><span class="material-icons">redo</span> Redo</button>
+        <button id="saveBtn" class="btn primary has-tooltip" data-tooltip="Persist the sheet to IndexedDB\nShortcut: Ctrl/Cmd + S" aria-label="Save"><span class="material-icons">save</span> Save</button>
+        <button id="clearBtn" class="btn has-tooltip" data-tooltip="Clear all cells and dimensions.\nRemoves from IndexedDB too." aria-label="Clear form"><span class="material-icons">clear_all</span> Clear</button>
+        <button id="exportBtn" class="btn has-tooltip" data-tooltip="Export as structured Markdown (.md)\nIncludes metadata & grid content." aria-label="Export Markdown"><span class="material-icons">download</span> Export .md</button>
       </div>
     </header>
 
     <!-- Toolbar -->
     <section class="toolbar" role="group" aria-label="Toolbar">
       <div class="group">
-        <span class="has-tooltip" data-tooltip="This is a mock toolbar group.\nAdd buttons as needed.">🧰</span>
-        <span class="has-tooltip" data-tooltip="Selection and formatting tools would go here.">🎛️</span>
+        <span class="has-tooltip material-icons" data-tooltip="This is a mock toolbar group.\nAdd buttons as needed." aria-label="Mock toolbar group">build</span>
+        <span class="has-tooltip material-icons" data-tooltip="Selection and formatting tools would go here." aria-label="Formatting tools">tune</span>
       </div>
       <div class="group">
-        <span class="has-tooltip" data-tooltip="Keyboard navigation: arrows, Tab, Enter.\nDouble‑click a cell to edit.">⌨️</span>
-        <span class="has-tooltip" data-tooltip="Resize columns/rows: drag dividers in headers.">↔️</span>
+        <span class="has-tooltip material-icons" data-tooltip="Keyboard navigation: arrows, Tab, Enter.\nDouble‑click a cell to edit." aria-label="Navigation info">keyboard</span>
+        <span class="has-tooltip material-icons" data-tooltip="Resize columns/rows: drag dividers in headers." aria-label="Resize info">open_with</span>
       </div>
       <div class="group">
-        <span class="has-tooltip" data-tooltip="Cells are inline editable.\nUndo/Redo supported.">📝</span>
+        <span class="has-tooltip material-icons" data-tooltip="Cells are inline editable.\nUndo/Redo supported." aria-label="Editing info">edit</span>
       </div>
     </section>
 
